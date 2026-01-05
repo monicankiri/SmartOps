@@ -1,2 +1,2 @@
 # SmartOps
- Business Data Cleaner &amp; Insight Engine
+AI-Powered Business Data Cleaner & Insight Engine
