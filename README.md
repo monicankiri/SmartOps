@@ -13,6 +13,19 @@
 
 Built with Python, Streamlit, and SQLite.
 
+# Evolution 🚀
+
+This repository documents my journey from building simple tools to developing full AI systems for businesses.
+
+## Stages
+1. Tool (Customer Manager)
+2. AI Tool (Insights)
+3. AI System (Automation + Chatbot)
+4. Future: Robotics Integration
+
+## Vision
+To build AI systems that help small businesses grow and make better decisions.
+
 ## Day 1: Project Setup & Database Design
 
 ### What I Did
