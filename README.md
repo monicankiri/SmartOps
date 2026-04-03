@@ -17,5 +17,5 @@ buying. SmartOps fixes that with AI-powered churn detection.
 
 ## Status
 Week 1 — customer tracking and follow-up detection complete
-Building in public. Follow the journey on LinkedIn: [your link]www.linkedin.com/in/nkiri-monica-2b220b268
+Building in public. Follow the journey on LinkedIn: [www.linkedin.com/in/nkiri-monica-2b220b268]
 
