@@ -1,76 +1,92 @@
-# SmartOps v1 🚀
+# SmartOps — AI-Powered Customer Follow-Up Intelligence System
 
-SmartOps is a simple AI-powered follow-up system designed for small and medium businesses (SMEs) to track customers and never miss sales opportunities.
+## Overview
+SmartOps is a web-based customer retention and follow-up management system designed for SMEs. It helps businesses track customer activity, detect inactive customers, and improve follow-up processes to reduce customer loss.
 
-## 💡 Problem
-Many small businesses lose potential customers because they:
-- Forget to follow up
-- Track leads manually (or not at all)
-- Rely on memory or scattered chats
+## Quick Start
 
-## ✅ Solution
-SmartOps helps businesses:
-- Store customer details
-- Track follow-ups
-- Identify pending leads
-- Stay organized and consistent
-
----
-
-## ⚙️ Features
-- Add customer (name, phone, request)
-- View all customers
-- Mark follow-ups as completed
-- View pending follow-ups
-
----
-
-## 🛠 Tech Stack
-- Python
-- JSON (for data storage)
-
----
-
-## 🚀 How to Run
-
-1. Clone the repository:
-```
-git clone https://github.com/monicankiri/smartops.git
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
 ```
 
-2. Navigate to the folder:
-```
-cd smartops
+### 2. Run the Application
+```bash
+python app.py
 ```
 
-3. Run the app:
+### 3. Open in Browser
+Visit: `http://localhost:5000`
+
+### Demo Account
+- **Username:** `demo`
+- **Password:** `demo1234`
+
+---
+
+## Features (MVP)
+- **User Authentication** — Register, login, logout with bcrypt password hashing
+- **Customer Management** — Add, view, edit, delete customer records
+- **Follow-Up Engine** — Automatically detects inactive customers and assigns risk levels
+- **Risk Classification** — HIGH (14+ days), MEDIUM (7–13 days), HEALTHY (<7 days)
+- **AI-Generated Suggestions** — Context-aware follow-up message templates
+- **Follow-Up Logging** — Track every follow-up with method, status, and notes
+- **Dashboard** — Centralized view of all customers and action items
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Python 3 + Flask |
+| Database | SQLite (MVP) → PostgreSQL (Production) |
+| ORM | SQLAlchemy |
+| Frontend | HTML + CSS + Jinja2 Templates |
+| Authentication | Flask-Login + Werkzeug (bcrypt) |
+| Future AI | Claude API / OpenAI API |
+
+---
+
+## Project Structure
 ```
-python main.py
+smartops/
+├── app.py              # Main Flask application
+├── requirements.txt    # Python dependencies
+├── templates/
+│   ├── base.html       # Base layout
+│   ├── login.html      # Login page
+│   ├── register.html   # Registration page
+│   ├── dashboard.html  # Main dashboard
+│   ├── customers.html  # Customer list
+│   ├── add_customer.html
+│   ├── edit_customer.html
+│   ├── customer_detail.html
+│   └── followups.html
+└── smartops.db         # SQLite database (auto-created)
 ```
 
 ---
 
-## 📌 Example Use Case
+## Roadmap
 
-A small business owner:
-- Adds a new customer inquiry
-- Checks daily pending follow-ups
-- Sends messages and closes more sales
-
----
-
-## 🔮 Future Improvements
-- AI-generated follow-up messages
-- Web-based dashboard
-- User authentication
-- SaaS deployment
+| Version | Features |
+|---------|---------|
+| V1 (Current) | Flask MVP — auth, customers, follow-up engine |
+| V2 | Claude API integration, email/SMS notifications |
+| V3 | Multi-tenancy, PostgreSQL, payment integration |
+| V4 | Full SaaS platform, automated workflows |
+| V5 | West African SME intelligence infrastructure |
 
 ---
 
-## 📈 Project Vision
-SmartOps is being built as a step toward a full AI-powered CRM system for SMEs in West Africa.
+## Security Notes
+- Passwords are hashed using Werkzeug (bcrypt-based) — **never stored in plain text**
+- Session management via Flask-Login
+- HTTPS/TLS should be enforced in production
+- NDPR compliance measures required before public deployment
 
 ---
 
-## 👤 Author
-Building in public: documenting the journey of creating SmartOps from scratch 🚀
+## Author
+Monica — AI Accelerator Program Capstone Project, 2026
