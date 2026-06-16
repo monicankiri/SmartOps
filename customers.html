@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Customers — SmartOps{% endblock %}
+{% block content %}
+
+<div class="top-bar">
+    <h1 class="page-title">👥 Customers</h1>
+    <a href="{{ url_for('add_customer') }}" class="btn btn-primary">+ Add Customer</a>
+</div>
+
+<div class="card">
+    {% if customers %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Service / Request</th>
+                <th>Last Contacted</th>
+                <th>Days Inactive</th>
+                <th>Risk</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in customers %}
+        <tr>
+            <td><strong>{{ c.name }}</strong></td>
+            <td>{{ c.phone or '—' }}</td>
+            <td>{{ c.email or '—' }}</td>
+            <td>{{ c.request or '—' }}</td>
+            <td>{{ c.last_contacted.strftime('%d %b %Y') }}</td>
+            <td>{{ c.days_inactive }}d</td>
+            <td>
+                <span class="badge {% if c.risk_level == 'HIGH' %}badge-red{% elif c.risk_level == 'MEDIUM' %}badge-amber{% else %}badge-green{% endif %}">
+                    {{ c.risk_level }}
+                </span>
+            </td>
+            <td style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+                <a href="{{ url_for('customer_detail', customer_id=c.id) }}" class="btn btn-sm btn-primary">View</a>
+                <a href="{{ url_for('edit_customer', customer_id=c.id) }}" class="btn btn-sm btn-ghost">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div style="font-size:3rem">👥</div>
+        <strong>No customers yet</strong>
+        <p>Add your first customer to start tracking follow-ups.</p>
+        <br>
+        <a href="{{ url_for('add_customer') }}" class="btn btn-primary">+ Add Customer</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

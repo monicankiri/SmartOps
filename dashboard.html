@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — SmartOps{% endblock %}
+{% block content %}
+
+<div class="top-bar">
+    <h1 class="page-title">📊 Dashboard</h1>
+    <a href="{{ url_for('add_customer') }}" class="btn btn-primary">+ Add Customer</a>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-number">{{ total }}</div>
+        <div class="stat-label">Total Customers</div>
+    </div>
+    <div class="stat-card red">
+        <div class="stat-number">{{ high_risk|length }}</div>
+        <div class="stat-label">High Risk (14+ days)</div>
+    </div>
+    <div class="stat-card amber">
+        <div class="stat-number">{{ medium_risk|length }}</div>
+        <div class="stat-label">Medium Risk (7–13 days)</div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-number">{{ healthy|length }}</div>
+        <div class="stat-label">Healthy (Active)</div>
+    </div>
+</div>
+
+<!-- Follow-Ups Due -->
+{% if due_followups %}
+<div class="card">
+    <div class="card-title">⚠️ Follow-Ups Required ({{ due_followups|length }})</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Service</th>
+                <th>Days Inactive</th>
+                <th>Risk</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in due_followups|sort(attribute='days_inactive', reverse=True) %}
+        <tr>
+            <td><strong>{{ c.name }}</strong></td>
+            <td>{{ c.phone or '—' }}</td>
+            <td>{{ c.request or '—' }}</td>
+            <td>{{ c.days_inactive }} days</td>
+            <td>
+                <span class="badge {% if c.risk_level == 'HIGH' %}badge-red{% else %}badge-amber{% endif %}">
+                    {{ c.risk_level }}
+                </span>
+            </td>
+            <td><a href="{{ url_for('customer_detail', customer_id=c.id) }}" class="btn btn-sm btn-primary">View</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card">
+    <div class="empty-state">
+        <div style="font-size:2.5rem">✅</div>
+        <strong>All customers are healthy!</strong>
+        <p>No follow-ups required right now.</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- All Customers Overview -->
+{% if customers %}
+<div class="card">
+    <div class="card-title">👥 All Customers</div>
+    <table>
+        <thead>
+            <tr><th>Name</th><th>Phone</th><th>Last Contacted</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for c in customers|sort(attribute='days_inactive', reverse=True) %}
+        <tr>
+            <td><strong>{{ c.name }}</strong></td>
+            <td>{{ c.phone or '—' }}</td>
+            <td>{{ c.last_contacted.strftime('%d %b %Y') }}</td>
+            <td>
+                <span class="badge {% if c.risk_level == 'HIGH' %}badge-red{% elif c.risk_level == 'MEDIUM' %}badge-amber{% else %}badge-green{% endif %}">
+                    {{ c.risk_level }}
+                </span>
+            </td>
+            <td><a href="{{ url_for('customer_detail', customer_id=c.id) }}" class="btn btn-sm btn-ghost">Details</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card">
+    <div class="empty-state">
+        <div style="font-size:3rem">👥</div>
+        <strong>No customers yet</strong>
+        <p>Add your first customer to get started.</p>
+        <br>
+        <a href="{{ url_for('add_customer') }}" class="btn btn-primary">+ Add Customer</a>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

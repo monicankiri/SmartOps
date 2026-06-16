@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Follow-Ups — SmartOps{% endblock %}
+{% block content %}
+
+<h1 class="page-title">📋 All Follow-Up Activity</h1>
+
+<div class="card">
+    {% if followups %}
+    <table>
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>AI Suggested</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for f in followups %}
+        <tr>
+            <td>
+                <a href="{{ url_for('customer_detail', customer_id=f.customer_id) }}" style="color:#0ea5e9;text-decoration:none;font-weight:600;">
+                    {{ f.customer.name }}
+                </a>
+            </td>
+            <td>{{ f.follow_up_date.strftime('%d %b %Y') }}</td>
+            <td><span class="badge badge-blue">{{ f.follow_up_type }}</span></td>
+            <td>
+                <span class="badge {% if f.status == 'Completed' %}badge-green{% elif f.status == 'Pending' %}badge-amber{% else %}badge-red{% endif %}">
+                    {{ f.status }}
+                </span>
+            </td>
+            <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ f.notes or '—' }}</td>
+            <td>{% if f.ai_suggested %}<span class="badge badge-blue">Yes</span>{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div style="font-size:3rem">📋</div>
+        <strong>No follow-up activity yet</strong>
+        <p>Follow-ups you log from customer profiles will appear here.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

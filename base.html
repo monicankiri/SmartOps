@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SmartOps{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a202c; }
+
+        /* NAV */
+        nav { background: #0f172a; color: white; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+        .nav-brand { font-size: 1.4rem; font-weight: 800; color: #38bdf8; letter-spacing: -0.5px; }
+        .nav-brand span { color: #ffffff; }
+        .nav-links { display: flex; gap: 0.5rem; align-items: center; }
+        .nav-links a { color: #94a3b8; text-decoration: none; padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.9rem; transition: all 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: white; background: #1e293b; }
+        .nav-links .btn-logout { color: #f87171; }
+        .nav-user { color: #64748b; font-size: 0.85rem; }
+
+        /* LAYOUT */
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .page-title { font-size: 1.6rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem; }
+
+        /* CARDS */
+        .card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 1.5rem; }
+        .card-title { font-size: 1rem; font-weight: 600; color: #475569; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.8rem; }
+
+        /* STAT CARDS */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: white; border-radius: 12px; padding: 1.25rem 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-left: 4px solid #e2e8f0; }
+        .stat-card.red { border-left-color: #ef4444; }
+        .stat-card.amber { border-left-color: #f59e0b; }
+        .stat-card.green { border-left-color: #10b981; }
+        .stat-card.blue { border-left-color: #3b82f6; }
+        .stat-number { font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1; }
+        .stat-label { font-size: 0.82rem; color: #64748b; margin-top: 0.3rem; }
+
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8fafc; color: #475569; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        td { padding: 0.85rem 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8fafc; }
+
+        /* BADGES */
+        .badge { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-red { background: #fee2e2; color: #dc2626; }
+        .badge-amber { background: #fef3c7; color: #d97706; }
+        .badge-green { background: #d1fae5; color: #059669; }
+        .badge-blue { background: #dbeafe; color: #2563eb; }
+        .badge-gray { background: #f1f5f9; color: #64748b; }
+
+        /* BUTTONS */
+        .btn { display: inline-block; padding: 0.5rem 1.1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: #0ea5e9; color: white; }
+        .btn-primary:hover { background: #0284c7; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-ghost { background: transparent; color: #64748b; border: 1px solid #e2e8f0; }
+        .btn-ghost:hover { background: #f8fafc; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-sm { padding: 0.3rem 0.75rem; font-size: 0.8rem; }
+
+        /* FORMS */
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 0.4rem; }
+        input, select, textarea { width: 100%; padding: 0.6rem 0.9rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; color: #1a202c; transition: border 0.2s; background: white; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 3px rgba(14,165,233,0.1); }
+        textarea { min-height: 90px; resize: vertical; }
+
+        /* ALERTS */
+        .alert { padding: 0.85rem 1.1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
+        .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 3rem 1rem; color: #94a3b8; }
+        .empty-state p { margin-top: 0.5rem; font-size: 0.9rem; }
+
+        /* SUGGESTION BOX */
+        .suggestion-box { background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%); border: 1px solid #bae6fd; border-radius: 12px; padding: 1.25rem; margin-top: 1rem; }
+        .suggestion-box .ai-label { font-size: 0.75rem; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .suggestion-box p { font-size: 0.9rem; color: #1e40af; line-height: 1.6; }
+
+        /* TOP BAR */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
+    </style>
+</head>
+<body>
+{% if current_user.is_authenticated %}
+<nav>
+    <div class="nav-brand">Smart<span>Ops</span></div>
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}" {% if request.endpoint == 'dashboard' %}class="active"{% endif %}>Dashboard</a>
+        <a href="{{ url_for('customers') }}" {% if request.endpoint in ['customers','add_customer','customer_detail','edit_customer'] %}class="active"{% endif %}>Customers</a>
+        <a href="{{ url_for('followups') }}" {% if request.endpoint == 'followups' %}class="active"{% endif %}>Follow-Ups</a>
+        <span class="nav-user">👤 {{ current_user.username }}</span>
+        <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+    </div>
+</nav>
+{% endif %}
+
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

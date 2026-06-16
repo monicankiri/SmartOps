@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}{{ customer.name }} — SmartOps{% endblock %}
+{% block content %}
+
+<div class="top-bar">
+    <h1 class="page-title">
+        {{ customer.name }}
+        <span class="badge {% if customer.risk_level == 'HIGH' %}badge-red{% elif customer.risk_level == 'MEDIUM' %}badge-amber{% else %}badge-green{% endif %}" style="font-size:0.75rem;vertical-align:middle;margin-left:0.5rem;">
+            {{ customer.risk_level }} RISK
+        </span>
+    </h1>
+    <div style="display:flex;gap:0.5rem;">
+        <a href="{{ url_for('edit_customer', customer_id=customer.id) }}" class="btn btn-ghost">Edit</a>
+        <a href="{{ url_for('customers') }}" class="btn btn-ghost">← Back</a>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+
+    <!-- Customer Info -->
+    <div class="card">
+        <div class="card-title">Customer Information</div>
+        <table style="font-size:0.9rem;">
+            <tr><td style="color:#64748b;padding:0.5rem 0;width:130px;">Phone</td><td><strong>{{ customer.phone or '—' }}</strong></td></tr>
+            <tr><td style="color:#64748b;padding:0.5rem 0;">Email</td><td>{{ customer.email or '—' }}</td></tr>
+            <tr><td style="color:#64748b;padding:0.5rem 0;">Service</td><td>{{ customer.request or '—' }}</td></tr>
+            <tr><td style="color:#64748b;padding:0.5rem 0;">Last Contact</td><td>{{ customer.last_contacted.strftime('%d %B %Y') }}</td></tr>
+            <tr><td style="color:#64748b;padding:0.5rem 0;">Days Inactive</td><td><strong style="color:{% if customer.risk_level == 'HIGH' %}#dc2626{% elif customer.risk_level == 'MEDIUM' %}#d97706{% else %}#059669{% endif %};">{{ customer.days_inactive }} days</strong></td></tr>
+            <tr><td style="color:#64748b;padding:0.5rem 0;">Added On</td><td>{{ customer.created_at.strftime('%d %b %Y') }}</td></tr>
+        </table>
+
+        <!-- AI Suggestion -->
+        <div class="suggestion-box" style="margin-top:1.25rem;">
+            <div class="ai-label">🤖 AI Follow-Up Suggestion</div>
+            <p>{{ suggestion }}</p>
+        </div>
+    </div>
+
+    <!-- Log Follow-Up -->
+    <div class="card">
+        <div class="card-title">Log a Follow-Up</div>
+        <form method="POST" action="{{ url_for('log_followup', customer_id=customer.id) }}">
+            <div class="form-group">
+                <label>Contact Method</label>
+                <select name="type">
+                    <option value="call">📞 Phone Call</option>
+                    <option value="WhatsApp">💬 WhatsApp</option>
+                    <option value="SMS">📱 SMS</option>
+                    <option value="email">✉️ Email</option>
+                    <option value="in-person">🤝 In Person</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select name="status">
+                    <option value="Completed">✅ Completed</option>
+                    <option value="Pending">⏳ Pending</option>
+                    <option value="No Response">❌ No Response</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea name="notes" placeholder="What happened? Any updates?"></textarea>
+            </div>
+            <div class="form-group">
+                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+                    <input type="checkbox" name="ai_suggested" value="true" style="width:auto;">
+                    Used AI suggestion above
+                </label>
+            </div>
+            <button type="submit" class="btn btn-success">Log Follow-Up</button>
+        </form>
+    </div>
+</div>
+
+<!-- Follow-Up History -->
+<div class="card">
+    <div class="card-title">Follow-Up History ({{ followups|length }})</div>
+    {% if followups %}
+    <table>
+        <thead>
+            <tr><th>Date</th><th>Method</th><th>Status</th><th>Notes</th><th>AI Used</th></tr>
+        </thead>
+        <tbody>
+        {% for f in followups %}
+        <tr>
+            <td>{{ f.follow_up_date.strftime('%d %b %Y, %H:%M') }}</td>
+            <td><span class="badge badge-blue">{{ f.follow_up_type }}</span></td>
+            <td>
+                <span class="badge {% if f.status == 'Completed' %}badge-green{% elif f.status == 'Pending' %}badge-amber{% else %}badge-red{% endif %}">
+                    {{ f.status }}
+                </span>
+            </td>
+            <td>{{ f.notes or '—' }}</td>
+            <td>{% if f.ai_suggested %}<span class="badge badge-blue">Yes</span>{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No follow-ups logged yet for this customer.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Danger Zone -->
+<div class="card" style="border:1px solid #fee2e2;">
+    <div class="card-title" style="color:#dc2626;">Danger Zone</div>
+    <p style="font-size:0.875rem;color:#64748b;margin-bottom:1rem;">Permanently delete this customer and all associated follow-up records.</p>
+    <form method="POST" action="{{ url_for('delete_customer', customer_id=customer.id) }}" onsubmit="return confirm('Delete {{ customer.name }}? This cannot be undone.');">
+        <button type="submit" class="btn btn-danger btn-sm">🗑 Delete Customer</button>
+    </form>
+</div>
+
+{% endblock %}
