@@ -603,6 +603,14 @@ def seed_demo_data(user):
 
 with app.app_context():
     db.create_all()
+    if not User.query.filter_by(username='demo').first():
+        demo = User(
+            username='demo',
+            email='demo@smartops.com',
+            password=generate_password_hash('demo1234')
+        )
+        db.session.add(demo)
+        db.session.commit()
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
