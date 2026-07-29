@@ -601,18 +601,8 @@ def seed_demo_data(user):
     db.session.commit()
 
 
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        # Create demo user if not exists
-        if not User.query.filter_by(username='demo').first():
-            demo = User(
-                username='demo',
-                email='demo@smartops.com',
-                password=generate_password_hash('demo1234')
-            )
-            db.session.add(demo)
-            db.session.commit()
-            seed_demo_data(demo)
-            print("✅ Demo user created: username=demo, password=demo1234")
     app.run(debug=True, port=5000)
