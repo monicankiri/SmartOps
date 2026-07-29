@@ -11,8 +11,9 @@ from datetime import datetime, timedelta
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'smartops-secret-key-change-in-production'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///smartops.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'smartops-secret-key-change-in-production')
+import os
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///smartops.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
